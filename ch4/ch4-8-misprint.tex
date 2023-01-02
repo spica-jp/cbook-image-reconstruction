@@ -1,0 +1,83 @@
+\documentclass{ltjsarticle}
+\usepackage[strict,showonlyrefs,notwithinsection]{skrep}
+\tcbset{%
+  important/.style={%
+    enhanced,frame hidden,colback=gray!20,arc=1.5mm,%
+  }
+}
+
+\begin{document}
+\title{『C言語による画像再構成の基礎』式(4-53)に関して}
+\author{@spica-jp}
+\date{\today（\jpndow）}
+\maketitle
+教科書（『C言語による画像再構成の基礎』）p. 144の式(4-53)の2行上で提示された式，すなわち
+\begin{equation}
+F(2k+1)=\sum_{j=0}^{\pffrac{N}{2}-1}f'(j)\exp(-\frac{2\pi ij(2k+1)}{N})+\sum_{j=0}^{\pffrac{N}{2}-1}f'\qty(j+\frac{N}{2})\exp(-\frac{2\pi i(j+\pffrac{N}{2})(2k+1)}{N})
+\end{equation}
+から出発する。\par
+さて，
+\begin{align}
+\exp(-\frac{2\pi ij(2k+1)}{N})
+&=\exp(-\frac{4\pi ijk+2\pi ij}{N})\\
+&=\exp(-\frac{4\pi ijk}{N}-\frac{2\pi ij}{N})\\
+&=\exp(-\frac{4\pi ijk}{N})\exp\qty(-\frac{2\pi ij}{N})\\
+&=\exp(-\frac{2\pi ijk}{\ffrac{N}{2}})\exp\qty(-\frac{2\pi ij}{N})
+\end{align}
+であり，また，
+\begin{align}
+\exp(-\frac{2\pi i(j+\pffrac{N}{2})(2k+1)}{N})
+&=\exp(-\frac{(2\pi ij+\pi iN)(2k+1)}{N})\\
+%&=\exp(-\frac{4\pi ijk+2\pi ij+\pi iN(2k+1)}{N})\\
+&=\exp(-\frac{4\pi ijk+2\pi ij}{N}-\frac{\pi iN(2k+1)}{N})\\
+&=\exp(-\frac{4\pi ijk}{N}-\frac{2\pi ij}{N}-\pi i(2k+1))\\
+&=\exp(-\frac{4\pi ijk}{N})\exp(-\frac{2\pi ij}{N})\exp(-\pi i(2k+1))\\
+&=\exp(-\frac{2\pi ijk}{\ffrac{N}{2}})\exp(-\frac{2\pi ij}{N})\exp(-\pi i(2k+1))
+\end{align}
+である。\par
+よって，
+\begin{align}
+F(2k+1)
+&=\sum_{j=0}^{\pffrac{N}{2}-1}f'(j)\exp(-\frac{2\pi ijk}{\ffrac{N}{2}})\exp\qty(-\frac{2\pi ij}{N})\\
+&\phantom{{}={}}+\sum_{j=0}^{\pffrac{N}{2}-1}f'\qty(j+\frac{N}{2})\exp(-\frac{2\pi ijk}{\ffrac{N}{2}})\exp(-\frac{2\pi ij}{N})\exp(-\pi i(2k+1))\\
+&=\sum_{j=0}^{\pffrac{N}{2}-1}f'(j)\exp(-\frac{2\pi ijk}{\ffrac{N}{2}})\exp(-\frac{2\pi ij}{N})\\
+&\phantom{{}={}}+\exp(-\pi i(2k+1))\sum_{j=0}^{\pffrac{N}{2}-1}f'\qty(j+\frac{N}{2})\exp(-\frac{2\pi ijk}{\ffrac{N}{2}})\exp(-\frac{2\pi ij}{N})\\
+&=\sum_{j=0}^{\pffrac{N}{2}-1}\qty(f'(j)+\exp(-\pi i(2k+1))f'\qty(j+\frac{N}{2}))\exp(-\frac{2\pi ijk}{\ffrac{N}{2}})\exp(-\frac{2\pi ij}{N})
+\end{align}
+となる。ここで，オイラーの公式\footnote{%
+$\theta(\in\mathbb{R})$に対し，$e^{i\theta}=\cos\theta+i\sin\theta$が成り立つ，という公式であり，教科書ではp. 140にて言及されている。
+}，及び$k\in\mathbb{Z}$より，
+\begin{equation}
+\exp(-\pi i(2k+1))
+=\cos(-\pi(2k+1))+i\sin(-\pi(2k+1))
+=-1+0
+=-1
+\end{equation}
+であるから，
+\begin{equation}
+\tcboxmath[important]{%
+F(2k+1)=\sum_{j=0}^{\pffrac{N}{2}-1}\qty(f'(j)-f'\qty(j+\frac{N}{2}))\exp(-\frac{2\pi ijk}{\ffrac{N}{2}})\exp(-\frac{2\pi ij}{N})
+}
+\label{eq:correct}
+\end{equation}
+を得る。これを教科書風に書き直せば，
+\begin{equation}
+F(2k+1)=\sum_{j=0}^{\ffrac{N}{2}-1}\qty[f'(j)-f'(j+\ffrac{N}{2})]e^{\textstyle-\frac{2\pi ijk}{\ffrac{N}{2}}}\cdot e^{\textstyle-\frac{2\pi ij}{N}}
+\end{equation}
+であり，教科書の式(4-53)，すなわち
+\begin{equation}
+F(2k+1)=\sum_{j=0}^{\ffrac{N}{2}-1}\qty[f'(j)-e^{\textstyle-\frac{2\pi ij}{N}}\cdot f'(j+\ffrac{N}{2})]e^{\textstyle-\frac{2\pi ijk}{\ffrac{N}{2}}}
+\end{equation}
+とはならない。\par
+なお，式\eqref{eq:correct}をさらに整理すると，
+\begin{equation}
+\tcboxmath[important]{%
+F(2k+1)=\sum_{j=0}^{\pffrac{N}{2}-1}\qty(f'(j)-f'\qty(j+\frac{N}{2}))\exp(-\frac{\pi ij(2k+1)}{\ffrac{N}{2}})
+}
+\end{equation}
+となる。教科書の式(4-52)，すなわち
+\begin{equation}
+F(2k)=\sum_{j=0}^{\pffrac{N}{2}-1}\qty(f'(j)+f'\qty(j+\frac{N}{2}))\exp(-\frac{\pi ij(2k)}{\ffrac{N}{2}})
+\end{equation}
+とも比較されたい。
+\end{document}
