@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 gnuplot << EOF
 set terminal png size 640, 480 font ",12"
